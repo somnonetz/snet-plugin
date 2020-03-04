@@ -1,0 +1,151 @@
+/*
+ * build.gradle
+ * XNAT http://www.xnat.org
+ * Copyright (c) 2019, Washington University School of Medicine
+ * All Rights Reserved
+ *
+ * Released under the Simplified BSD.
+ */
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'xnat-data-builder'
+
+buildscript {
+    ext{
+        vXnat = '1.7.5.3'
+    }
+    repositories {
+        mavenLocal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://nrgxnat.jfrog.io/nrgxnat/libs-release'
+            name 'XNAT Release Repository'
+        }
+        maven {
+            url 'https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot'
+            name 'XNAT Snapshot Repository'
+        }
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+        classpath "org.nrg.xnat.build:xnat-data-builder:1.7.5"
+    }
+}
+
+def groupName = 'org.nrg.xnat.plugin'
+def pluginVersion = '1.0.0'
+
+group groupName
+version pluginVersion
+
+repositories {
+    mavenLocal()
+    maven {
+        url 'https://nrgxnat.jfrog.io/nrgxnat/libs-release'
+        name 'XNAT Release Repository'
+    }
+    mavenCentral()
+    jcenter()
+    maven {
+        url 'https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot'
+        name 'XNAT Snapshot Repository'
+    }
+    maven {
+        url 'https://nrgxnat.jfrog.io/nrgxnat/ext-release'
+        name 'XNAT External Release Repository'
+    }
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+if (hasProperty("rt.17.jar")) {
+    // Solution for bootstrap classpath warning and possible issues with compatibility with 1.7 libraries
+    // was taken from this post on discuss.gradle.org: http://bit.ly/24xD9j0
+    def rt17jar = getProperty("rt.17.jar")
+    logger.info "Using ${rt17jar} as the bootstrap class path jar."
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.fork = true
+            options.compilerArgs << "-XDignore.symbol.file"
+            options.bootClasspath = rt17jar
+        }
+    }
+} else {
+    logger.warn "No value was set for the rt.17.jar build property, using the default bootstrap class path. You should consider setting rt.17.jar to indicate a jar file containing the Java 1.7 run-time library:\n"
+    logger.warn "  ./gradlew -Prt.17.jar=rt-1.7.0_45.jar war\n"
+}
+
+compileJava {
+    options.fork = false
+}
+
+jacoco {
+    toolVersion = "0.7.9"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled = false
+        csv.enabled = false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir 'build/xnat-generated/src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+            srcDir 'build/xnat-generated/src/main/resources'
+        }
+    }
+}
+
+configurations {
+    all {
+        exclude group: "jamon"
+        exclude group: "javax.jms", module: "jms"
+        exclude group: "javax.mail", module: "mail"
+        exclude group: "javax.servlet", module: "servlet-api"
+        exclude group: "javax.sql", module: "jdbc-stdext"
+        exclude group: "javax.transaction", module: "jta"
+
+    }
+    compile.extendsFrom(compileAndInclude)
+}
+
+dependencyManagement.imports {
+    mavenBom "org.nrg:parent:${vXnat}"
+}
+
+dependencies {
+    compile "org.nrg.xnat:web"
+    compile "org.nrg.xnat:xnat-data-models"
+    compile "org.nrg.xdat:core"
+    compile "org.nrg:framework"
+    compile(group: 'turbine', name: 'turbine') {
+        exclude group: '*'
+    }
+    compile "org.apache.velocity:velocity"
+    compile "log4j:log4j"
+    runtime 'org.springframework:spring-web'
+    runtime 'io.springfox:springfox-swagger-ui'
+    testCompile "junit:junit"
+    testCompile "org.springframework:spring-test"
+}

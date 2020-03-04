@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+$page.setTitle("keyQualityOverview Details")
+$page.setLinkColor($ui.alink)
+$page.setVlinkColor($ui.vlink)
+#if ($turbineUtils.GetPassedParameter("popup", $data))
+	#set ($popup = $turbineUtils.GetPassedParameter("popup", data) )
+	#set ($popup = "false")
+#end
+#set($asid = $item.getStringProperty("snet01:stmPsgSleep/imageSession_ID"))
+#set($pngfile = $item.getStringProperty("snet01:stmPsgSleep/algorithm"))
+#set($kqgroup = $item.getStringProperty("snet01:stmPsgSleep/kqgroup"))
+<TABLE width="100%">
+	<TR>
+		<TD>
+			<table width="50%">
+				<TR>
+					<TD align="left" valign="middle">
+						<font face="$ui.sansSerifFonts" size="3"><b>Polysomnographic Analysis</b></font>
+					</TD>
+				</TR>
+			</TABLE>
+		</TD>
+	</TR>
+	<TR>
+		<TD>
+			<TABLE width="70%">
+				<TR>
+					<TD valign="top">
+						<TABLE>
+
+							<TR><TD>date</TD><TD>$!item.getProperty("snet01:stmPsgSleep/date")</TD></TR>
+							<TR><TD>time</TD><TD>$!item.getProperty("snet01:stmPsgSleep/time")</TD></TR>
+							<TR><TD>note</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/note")</TD></TR>
+							<TR><TD>ID</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/ID")</TD></TR>
+							<TR><TD>project</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/project")</TD></TR>
+							<TR><TD>Time in Bed</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/timeinbed")</TD></TR>							<TR><TD>Sleep Period Time</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/sleepperiodtime")</TD></TR>
+							<TR><TD>Total SleepTime</TD><TD>$!item.getIntegerProperty("snet01:stmPsgSleep/TotalSleepTime")</TD></TR>
+							<TR><TD>Total WakeTime</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/TotalWakeTime")</TD></TR>
+							<TR><TD>Sleep Efficiency</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/SleepEfficiency")</TD></TR>
+							<TR><TD>Sleep Latency</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/SleepLatency")</TD></TR>
+							<TR><TD>Wake After Sleep Onset</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/WakeAfterSleepOnset")</TD></TR>
+							<TR><TD>Latency N1</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/LatencyN1")</TD></TR>
+							<TR><TD>Latency N2</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/LatencyN2")</TD></TR>
+							<TR><TD>Latency N3</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/LatencyN3")</TD></TR>
+							<TR><TD>Latency R</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/LatencyR")</TD></TR>
+							<TR><TD>Percent N1</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/PercenyN1")</TD></TR>
+							<TR><TD>Percent N2</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/PercentN2")</TD></TR>
+							<TR><TD>Percent N3</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/PercentN3")</TD></TR>
+							<TR><TD>Percent R</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/PercentR")</TD></TR>
+							<TR><TD>Number Awakening</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/NumberAwakening")</TD></TR>
+							<TR><TD>Awakening Index</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/AwakeningIndex")</TD></TR>
+							<TR><TD>Number Arousals</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/NumberArousals")</TD></TR>
+							<TR><TD>Arousal Index</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/ArousalIndex")</TD></TR>
+						</TABLE>
+					</TD>
+					<TD valign="top" align="right">
+						#elementActionsBox($element $search_field $search_value $data.getSession().getAttribute("user") $item)
+					</TD>
+				</TR>
+			</TABLE>
+		</TD>
+	</TR>
+	<TR>
+		<TD>
+<!-- BEGIN snet01:stmPsgSleep -->
+<!--			<TABLE>
+				<TR><TH align="left"><font face="$ui.sansSerifFonts" size="2">Histogram</font></TH></TR>
+<tr>
+        <td>
+            <A target="_blank" HREF="$content.getURI("/data/experiments/$asid/assessors/$om.getId()/resources/PNG/files/${pngfile}_results.png")" > <IMG SRC="$content.getURI("/data/experiments/$asid/assessors/$om.getId()/resources/PNG/files/${pngfile}_results.png")"> </A>
+        </td>
+    </tr>   
+
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE>
+<TR><TH align="left"><font face="$ui.sansSerifFonts" size="2">Key Quality Indicator</font></TH></TR>
+			<tr>
+				<td><strong>Indicator</strong></td>
+				<td><strong>Value</strong></td>
+</tr>
+<tr>
+#set ($query = "SELECT id FROM xnat_imageassessordata WHERE imagesession_id = '$asid'")
+#set ($kqiset = $user.getQueryResultsAsArrayList($query))
+			#set ($array = [])	
+			#foreach($assessment in $kqiset)
+				#### lese die k
+				#foreach($record in $user.getQueryResultsAsArrayList("SELECT name, value FROM qmroct_keyqualityindicator WHERE kqgroup = '$kqgroup' AND algorithm = '$pngfile' AND id = '$assessment.get(0)'"))
+					#set ($void = $array.add([$record.get(1),$record.get(2)]))
+				#end			
+				#foreach($record in $user.getQueryResultsAsArrayList("SELECT name, value FROM qmroct_keyqualityindicatorfloat WHERE kqgroup = '$kqgroup' AND algorithm = '$pngfile' AND id = '$assessment.get(0)'"))
+					#set ($void = $array.add([$record.get(0),$record.get(1)]))			
+				#end
+			#end
+#foreach($record in $array)
+				<td>$record.get(0)</td>
+
+				<td>$record.get(1)</td>
+</tr>	
+#end
+
+
+
+						</TABLE>
+					</TD>
+				</TR>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE><TR><TD>
+							#set($xnat_abstractResource_1_NUM_ROWS=$item.getChildItems("snet01:stmPsgSleep/in/file").size() - 1)
+							#if($xnat_abstractResource_1_NUM_ROWS>=0)
+								#foreach($xnat_abstractResource_1_COUNTER in [0..$xnat_abstractResource_1_NUM_ROWS])-->
+<!-- BEGIN snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER] -->
+									<TABLE>
+										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]</font></TH></TR>
+										<TR>
+											<TD align="left" valign="top">
+												<TABLE>
+													<TR><TD>note</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/note")</TD></TR>
+													<TR><TD>label</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/label")</TD></TR>
+													<TR><TD>file_count</TD><TD>$!item.getIntegerProperty("snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/file_count")</TD></TR>
+													<TR><TD>file_size</TD><TD>$!item.getProperty("snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/file_size")</TD></TR>
+												</TABLE>
+											</TD>
+										</TR>
+										<TR>
+											<TD align="left" valign="top">
+												<TABLE><TR><TD>
+													#set($xnat_abstractResource_tag_2_NUM_ROWS=$item.getChildItems("snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag").size() - 1)
+													#if($xnat_abstractResource_tag_2_NUM_ROWS>=0)
+														#foreach($xnat_abstractResource_tag_2_COUNTER in [0..$xnat_abstractResource_tag_2_NUM_ROWS])
+<!-- BEGIN snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER] -->
+															<TABLE>
+																<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]</font></TH></TR>
+																<TR>
+																	<TD align="left" valign="top">
+																		<TABLE>
+																			<TR><TD>tag</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/tag")</TD></TR>
+																			<TR><TD>name</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/name")</TD></TR>
+																		</TABLE>
+																	</TD>
+																</TR>
+															</TABLE>
+<!-- END snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER] -->
+														#end
+													#end
+												</TD></TR></TABLE>
+											</TD>
+										</TR>
+									</TABLE>
+<!-- END snet01:stmPsgSleep/in/file[$xnat_abstractResource_1_COUNTER] -->
+								#end
+							#end
+						</TD></TR></TABLE>
+					</TD>
+				</TR>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE><TR><TD>
+							#set($xnat_abstractResource_3_NUM_ROWS=$item.getChildItems("snet01:stmPsgSleep/out/file").size() - 1)
+							#if($xnat_abstractResource_3_NUM_ROWS>=0)
+								#foreach($xnat_abstractResource_3_COUNTER in [0..$xnat_abstractResource_3_NUM_ROWS])
+<!-- BEGIN snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER] -->
+									<TABLE>
+										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]</font></TH></TR>
+										<TR>
+											<TD align="left" valign="top">
+												<TABLE>
+													<TR><TD>note</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/note")</TD></TR>
+													<TR><TD>label</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/label")</TD></TR>
+													<TR><TD>file_count</TD><TD>$!item.getIntegerProperty("snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/file_count")</TD></TR>
+													<TR><TD>file_size</TD><TD>$!item.getProperty("snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/file_size")</TD></TR>
+												</TABLE>
+											</TD>
+										</TR>
+										<TR>
+											<TD align="left" valign="top">
+												<TABLE><TR><TD>
+													#set($xnat_abstractResource_tag_4_NUM_ROWS=$item.getChildItems("snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag").size() - 1)
+													#if($xnat_abstractResource_tag_4_NUM_ROWS>=0)
+														#foreach($xnat_abstractResource_tag_4_COUNTER in [0..$xnat_abstractResource_tag_4_NUM_ROWS])
+<!-- BEGIN snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER] -->
+															<TABLE>
+																<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER]</font></TH></TR>
+																<TR>
+																	<TD align="left" valign="top">
+																		<TABLE>
+																			<TR><TD>tag</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER]/tag")</TD></TR>
+																			<TR><TD>name</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER]/name")</TD></TR>
+																		</TABLE>
+																	</TD>
+																</TR>
+															</TABLE>
+<!-- END snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER] -->
+														#end
+													#end
+												</TD></TR></TABLE>
+											</TD>
+										</TR>
+									</TABLE>
+<!-- END snet01:stmPsgSleep/out/file[$xnat_abstractResource_3_COUNTER] -->
+								#end
+							#end
+						</TD></TR></TABLE>
+					</TD>
+				</TR>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE><TR><TD>
+							#set($xnat_addField_5_NUM_ROWS=$item.getChildItems("snet01:stmPsgSleep/parameters/addParam").size() - 1)
+							#if($xnat_addField_5_NUM_ROWS>=0)
+								#foreach($xnat_addField_5_COUNTER in [0..$xnat_addField_5_NUM_ROWS])
+<!-- BEGIN snet01:stmPsgSleep/parameters/addParam[$xnat_addField_5_COUNTER] -->
+									<TABLE>
+										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">snet01:stmPsgSleep/parameters/addParam[$xnat_addField_5_COUNTER]</font></TH></TR>
+										<TR>
+											<TD align="left" valign="top">
+												<TABLE>
+													<TR><TD>addField</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/parameters/addParam[$xnat_addField_5_COUNTER]/addField")</TD></TR>
+													<TR><TD>name</TD><TD>$!item.getStringProperty("snet01:stmPsgSleep/parameters/addParam[$xnat_addField_5_COUNTER]/name")</TD></TR>
+												</TABLE>
+											</TD>
+										</TR>
+									</TABLE>
+<!-- END snet01:stmPsgSleep/parameters/addParam[$xnat_addField_5_COUNTER] -->
+								#end
+							#end
+						</TD></TR></TABLE>
+					</TD>
+				</TR>
+			</TABLE>
+<!-- END snet01:stmPsgSleep -->
+		</TD>
+	</TR>
+</TABLE>

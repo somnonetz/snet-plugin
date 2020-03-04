@@ -1,0 +1,110 @@
+#set ($nrScans = $om.getSortedScans().size())
+#set ($nrRecords = $user.getQueryResultsAsArrayList("SELECT * FROM snet01_psgrecorddata").size()) 
+#set ($recordCount = $scanCounter+$nrScans)
+#set ($test = $scan.getProperty("xnat_imagescandata_id"))
+#set ($query = "SELECT snet01_psgscandata_records_id FROM snet01_psgscandata_records WHERE snet01_psgscandata_xnat_imagescandata_id = $test")
+#set ($recordsPKs = $user.getQueryResultsAsArrayList($query))
+
+<table>
+	#if($scan.getProperty("quality"))
+	<tr>
+		<td></td>
+		<td>Quality</td>
+		<td align="left">$!scan.getProperty("quality")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("psgdevice"))
+	<tr>
+		<td></td>
+		<td>PSG-Model</td>
+		<td align="left">$!scan.getProperty("psgdevice")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("recordingstartdate"))
+	<tr>
+
+		<td></td>
+		<td>Recording Start Date</td>
+		<td align="left">$!scan.getProperty("recordingstartdate")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("recordingstarttime"))
+	<tr>
+		<td></td>
+		<td>Recording Start Time</td>
+		<td align="left">$!scan.getProperty("recordingstarttime")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("durationofrecordhours"))
+	<tr>
+		<td></td>
+		<td>Duration of Record (minutes)</td>
+		<td align="left">$!scan.getProperty("durationofrecordhours")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("numberofsignalsindatarecord"))
+	<tr>
+		<td></td>
+		<td>Number of Channels</td>
+		<td align="left">$!scan.getProperty("numberofsignalsindatarecord")</td>
+	</tr>	
+	#end
+	<tr>
+		<td></td>
+      		<td>	<a name="LINK${scanID}Channelinfos" href="#LINK${scanID}Channelinfos" onClick="return blocking($recordCount);">
+          			<img id="IMG$recordCount" src="$content.getURI('images/plus.jpg')" border=0/>
+  			Channelinfos
+        		</a>
+      		</td>	
+	</tr>   
+	<tr>
+		<td></td>	        
+		<td>
+	        	<span id="span$!recordCount" style="position:relative; display:none;">
+			<table style="border-bottom:0">	
+			<tr>
+				<td><strong>Channelstandard</strong></td>
+				<td><strong>Labelstandard</strong></td>
+				<td><strong>Samplingrate [Hz]</strong></td>
+				<td><strong>Labeldevice</strong></td>
+				<td><strong>Channeldevice</strong></td>
+			</tr>	
+			#set ($array = [])	
+			#foreach($records in $recordsPKs)
+				#foreach($record in $user.getQueryResultsAsArrayList("SELECT channelnumberstandard, labelstandard, samplingrate, labeldevice, channelnumberdevice FROM snet01_psgrecorddata WHERE snet01_psgscandata_records_snet01_psgscandata_records_id = $records.get(0)"))
+					#set ($void = $array.add([$record.get(0),$record.get(1),$record.get(2),$record.get(3),$record.get(4)]))			
+				#end
+			#end
+			###### sort
+			#set($size=$array.size())
+			#foreach($junk in $array) ##Bubble sort takes n^2 passes
+				#set($actual=-1)##Having trouble with math on $velocityCount -- keeping my own count
+				#foreach($line in $array)
+					#set($actual=$actual+1)
+					#if($velocityCount < $size) 
+						#if ($line.get(0) > $array.get($velocityCount).get(0))
+							#set ($tmp=$array.get($velocityCount))
+							#set ($junk=$array.set($velocityCount,$line))
+							#set ($junk=$array.set($actual,$tmp))
+						#end
+					#end
+				#end
+			#end
+			#foreach($record in $array)
+					<tr>
+					#if ($record.get(0) < 100)
+						<td>$record.get(0)</td>
+					#else
+						<td>0</td>
+					#end
+					<td>$record.get(1)</td>
+					<td>$record.get(2)</td>
+					<td>$record.get(3)</td>
+					<td>$record.get(4)</td>
+					</tr>	
+			#end
+			</table>
+			</span>
+		</td>
+	</tr>
+</table>
