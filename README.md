@@ -20,4 +20,4 @@ cp build/libs/snet01-plugin-1.0.0.jar /path/to/xnat/plugins
 ## configure
 
 * login to xnat
-* go to `Administer -> Data Types -> Set Up Additional Data types` and add all the `snet01:*` data-types with default configuration values
+* go to `Administer -> Data Types -> Set Up Additional Data types` and add all the `snet01:*` data-types.
