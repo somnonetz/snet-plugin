@@ -1,3 +1,4 @@
+#set ($user = $data.getSession().getAttribute("userHelper"))
 #set ($nrScans = $om.getSortedScans().size())
 #set ($nrRecords = $user.getQueryResultsAsArrayList("SELECT * FROM snet01_psgrecorddata").size()) 
 #set ($recordCount = $scanCounter+$nrScans)
@@ -22,7 +23,6 @@
 	#end
 	#if($scan.getProperty("recordingstartdate"))
 	<tr>
-
 		<td></td>
 		<td>Recording Start Date</td>
 		<td align="left">$!scan.getProperty("recordingstartdate")</td>
@@ -38,7 +38,7 @@
 	#if($scan.getProperty("durationofrecordhours"))
 	<tr>
 		<td></td>
-		<td>Duration of Record (minutes)</td>
+		<td>Duration of Record (hours)</td>
 		<td align="left">$!scan.getProperty("durationofrecordhours")</td>
 	</tr>
 	#end
@@ -51,16 +51,17 @@
 	#end
 	<tr>
 		<td></td>
-      		<td>	<a name="LINK${scanID}Channelinfos" href="#LINK${scanID}Channelinfos" onClick="return blocking($recordCount);">
-          			<img id="IMG$recordCount" src="$content.getURI('images/plus.jpg')" border=0/>
-  			Channelinfos
-        		</a>
-      		</td>	
+		<td>
+			<a name="LINK${scanID}Channelinfos" href="#LINK${scanID}Channelinfos" onClick="return blocking($recordCount);">
+				<img id="IMG$recordCount" src="$content.getURI('images/plus.jpg')" border=0/>
+				Channelinfos
+			</a>
+		</td>
 	</tr>   
 	<tr>
 		<td></td>	        
 		<td>
-	        	<span id="span$!recordCount" style="position:relative; display:none;">
+	        <span id="span$!recordCount" style="position:relative; display:none;">
 			<table style="border-bottom:0">	
 			<tr>
 				<td><strong>Channelstandard</strong></td>
