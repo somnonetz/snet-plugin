@@ -14,7 +14,7 @@ xnat plugin providing basic data types for sleep research sessions
 ## install
 
 ```
-cp build/libs/snet01-plugin-0.1.0.jar /path/to/xnat/plugins
+cp build/libs/snet01-plugin-0.1.1.jar /path/to/xnat/plugins
 ```
 
 ## configure
