@@ -64,15 +64,13 @@
 	        <span id="span$!recordCount" style="position:relative; display:none;">
 			<table style="border-bottom:0">	
 			<tr>
-				<td><strong>Channelstandard</strong></td>
-				<td><strong>Labelstandard</strong></td>
+				<td><strong>Channel</strong></td>
+				<td><strong>Label</strong></td>
 				<td><strong>Samplingrate [Hz]</strong></td>
-				<td><strong>Labeldevice</strong></td>
-				<td><strong>Channeldevice</strong></td>
 			</tr>	
 			#set ($array = [])	
 			#foreach($records in $recordsPKs)
-				#foreach($record in $user.getQueryResultsAsArrayList("SELECT channelnumberstandard, labelstandard, samplingrate, labeldevice, channelnumberdevice FROM snet01_psgrecorddata WHERE snet01_psgscandata_records_snet01_psgscandata_records_id = $records.get(0)"))
+				#foreach($record in $user.getQueryResultsAsArrayList("SELECT channelnumberdevice, labeldevice, samplingrate FROM snet01_psgrecorddata WHERE snet01_psgscandata_records_snet01_psgscandata_records_id = $records.get(0)"))
 					#set ($void = $array.add([$record.get(0),$record.get(1),$record.get(2),$record.get(3),$record.get(4)]))			
 				#end
 			#end
@@ -100,8 +98,6 @@
 					#end
 					<td>$record.get(1)</td>
 					<td>$record.get(2)</td>
-					<td>$record.get(3)</td>
-					<td>$record.get(4)</td>
 					</tr>	
 			#end
 			</table>
