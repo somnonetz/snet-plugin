@@ -3,7 +3,6 @@
     <xs:import namespace="http://nrg.wustl.edu/xnat" schemaLocation="../xnat/xnat.xsd"/>
 	<xs:element name="SleepResearchSession" type="snet01:sleepResearchSessionData"/>         
 	<xs:element name="PSGScan" type="snet01:psgScanData"/>
-	<xs:element name="PSGEDFData" type="snet01:psgEDFData"/>
 	<xs:element name="PSGRecordData" type="snet01:psgRecordData"/>
 
 	<xs:complexType name="sleepResearchSessionData">
@@ -34,40 +33,6 @@
 					<xs:element name="numberofsignalsindatarecord" type="xs:integer" minOccurs="0"/>
 					<xs:element name="psgdevice" type="xs:string" minOccurs="0"/>  
 					<xs:element name="durationofrecordhours" type="xs:float" minOccurs="0"/>
-					<xs:element name="continuousdataflag" type="xs:integer" minOccurs="0"/> 
-					<xs:element name="comment" type="xs:string" minOccurs="0"/> 
-					<xs:element name="records" minOccurs="0" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="record" type="snet01:psgRecordData" minOccurs="0" maxOccurs="unbounded">
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="psgEDFData">
-		<xs:annotation>
-			<xs:documentation>Derived EDF from Polysomnographic scan</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="xnat:reconstructedImageData">
-				<xs:sequence>
-					<xs:element name="edfversion" type="xs:float" minOccurs="0"/>
-					<xs:element name="patientid" type="xs:string" minOccurs="0"/>
-					<xs:element name="localrecordid" type="xs:string" minOccurs="0"/>
-					<xs:element name="recordingstartdate" type="xs:string" minOccurs="0"/>
-					<xs:element name="recordingstarttime" type="xs:string" minOccurs="0"/>
-					<xs:element name="numberofheaderbytes" type="xs:integer" minOccurs="0"/>
-					<xs:element name="reservedheaderfield" type="xs:string" minOccurs="0"/>
-					<xs:element name="numberofdatarecords" type="xs:integer" minOccurs="0"/>
-					<xs:element name="durationofdatarecordseconds" type="xs:float" minOccurs="0"/>
-					<xs:element name="numberofsignalsindatarecord" type="xs:integer" minOccurs="0"/>
-					<xs:element name="psgdevice" type="xs:string" minOccurs="0"/>  
-					<xs:element name="durationofrecordminutes" type="xs:float" minOccurs="0"/>
 					<xs:element name="continuousdataflag" type="xs:integer" minOccurs="0"/> 
 					<xs:element name="comment" type="xs:string" minOccurs="0"/> 
 					<xs:element name="records" minOccurs="0" maxOccurs="unbounded">
