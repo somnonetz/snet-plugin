@@ -3,7 +3,6 @@
     <xs:import namespace="http://nrg.wustl.edu/xnat" schemaLocation="../xnat/xnat.xsd"/>
 	<xs:element name="SleepResearchSession" type="snet01:sleepResearchSessionData"/>         
 	<xs:element name="PSGScan" type="snet01:psgScanData"/>
-	<xs:element name="PSGRecordData" type="snet01:psgRecordData"/>
 
 	<xs:complexType name="sleepResearchSessionData">
 		<xs:annotation>
@@ -35,10 +34,44 @@
 					<xs:element name="durationofrecordhours" type="xs:float" minOccurs="0"/>
 					<xs:element name="continuousdataflag" type="xs:integer" minOccurs="0"/> 
 					<xs:element name="comment" type="xs:string" minOccurs="0"/> 
-					<xs:element name="records" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="records" minOccurs="0">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="record" type="snet01:psgRecordData" minOccurs="0" maxOccurs="unbounded">
+								<xs:element name="record" minOccurs="0" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:appinfo>
+											<xdat:element displayIdentifiers="labeldevice"/>
+											<xdat:field>
+												<xdat:relation uniqueComposite="scan_id_fk" relationType="single"/>
+											</xdat:field>
+										</xs:appinfo>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="labelstandard" type="xs:string" minOccurs="0"/>
+											<xs:element name="channelnumberdevice" type="xs:integer" minOccurs="0"/>
+											<xs:element name="channelnumberstandard" type="xs:integer" minOccurs="0"/>
+											<xs:element name="numberofchunks" type="xs:integer" minOccurs="0"/>
+											<xs:element name="samplingrate" type="xs:string" minOccurs="0"/>
+											<xs:element name="transducertype" type="xs:string" minOccurs="0"/>
+											<xs:element name="physicaldimension" type="xs:string" minOccurs="0"/>
+											<xs:element name="physicalminimum" type="xs:float" minOccurs="0"/>
+											<xs:element name="physicalmaximum" type="xs:float" minOccurs="0"/>
+											<xs:element name="digitalminimum" type="xs:integer" minOccurs="0"/>
+											<xs:element name="digitalmaximum" type="xs:integer" minOccurs="0"/>
+											<xs:element name="prefiltering" type="xs:string" minOccurs="0"/>
+											<xs:element name="samplesinrecord" type="xs:integer" minOccurs="0"/>
+											<xs:element name="reserved" type="xs:string" minOccurs="0"/>
+											<xs:element name="comment" type="xs:string" minOccurs="0"/>
+										</xs:sequence>
+										<xs:attribute name="labeldevice" type="xs:string">
+											<xs:annotation>
+												<xs:appinfo>
+													<xdat:field uniqueComposite="scan_id_fk"/>
+												</xs:appinfo>
+											</xs:annotation>
+										</xs:attribute>
+									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
@@ -46,29 +79,5 @@
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="psgRecordData">
-		<xs:annotation>
-			<xs:documentation>Individual record in PSG</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="labeldevice" type="xs:string" minOccurs="0"/>
-			<xs:element name="labelstandard" type="xs:string" minOccurs="0"/>
-			<xs:element name="channelnumberdevice" type="xs:integer" minOccurs="0"/>
-			<xs:element name="channelnumberstandard" type="xs:integer" minOccurs="0"/>
-			<xs:element name="numberofchunks" type="xs:integer" minOccurs="0"/>
-			<xs:element name="samplingrate" type="xs:string" minOccurs="0"/>
-			<xs:element name="transducertype" type="xs:string" minOccurs="0"/>
-			<xs:element name="physicaldimension" type="xs:string" minOccurs="0"/>
-			<xs:element name="physicalminimum" type="xs:float" minOccurs="0"/>
-			<xs:element name="physicalmaximum" type="xs:float" minOccurs="0"/>
-			<xs:element name="digitalminimum" type="xs:integer" minOccurs="0"/>
-			<xs:element name="digitalmaximum" type="xs:integer" minOccurs="0"/>
-			<xs:element name="prefiltering" type="xs:string" minOccurs="0"/>
-			<xs:element name="samplesinrecord" type="xs:integer" minOccurs="0"/>
-			<xs:element name="reserved" type="xs:string" minOccurs="0"/>
-			<xs:element name="comment" type="xs:string" minOccurs="0"/>
-		</xs:sequence>
 	</xs:complexType>
  </xs:schema>
