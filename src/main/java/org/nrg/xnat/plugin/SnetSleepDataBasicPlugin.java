@@ -5,7 +5,7 @@ import org.nrg.framework.annotations.XnatPlugin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-@XnatPlugin(value = "snet-plugin", name = "SNET SleepDataBasic", description = "Contains data types for SleepResearchSessionData, psgScanData, psgRecordData",
+@XnatPlugin(value = "snet-plugin", name = "SNET SleepDataBasic", description = "Contains data types for SleepResearchSessionData and psgScanData",
         dataModels = {@XnatDataModel(value = "snet01:SleepResearchSession",
                                      singular = "Sleep Research Session",
                                      plural = "Sleep Research Sessions",
@@ -13,10 +13,6 @@ import org.springframework.context.annotation.ComponentScan;
                       @XnatDataModel(value = "snet01:psgScanData",
                                      singular = "PSG Recording",
                                      plural = "PSG Recordings",
-                                     code = "PSG"),
-                      @XnatDataModel(value = "snet01:psgRecordData",
-                                     singular = "EDF Channel",
-                                     plural = "EDF Channels",
-                                     code = "CHA")})
+                                     code = "PSG")})
 public class SnetSleepDataBasicPlugin {
 }
