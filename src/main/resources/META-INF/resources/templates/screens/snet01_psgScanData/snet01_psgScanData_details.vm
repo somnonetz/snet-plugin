@@ -6,6 +6,8 @@
 #set ($query = "SELECT channelnumberdevice, labeldevice, samplingrate FROM snet01_psgscandata_record WHERE records_record_snet01_psgscanda_xnat_imagescandata_id = $imageScanId ORDER BY channelnumberdevice")
 #set ($records = $user.getQueryResultsAsArrayList($query))
 
+<h1> EDF Headers </h1>
+
 <table>
 	#if($scan.getProperty("quality"))
 	<tr>
@@ -49,34 +51,21 @@
 		<td align="left">$!scan.getProperty("numberofsignalsindatarecord")</td>
 	</tr>	
 	#end
+</table>
+
+<h2>Channel Headers</h2>
+
+<table style="border-bottom:0">	
 	<tr>
-		<td></td>
-		<td>
-			<a name="LINK${scanID}Channelinfos" href="#LINK${scanID}Channelinfos" onClick="return blocking($recordCount);">
-				<img id="IMG$recordCount" src="$content.getURI('images/plus.jpg')" border=0/>
-				Channelinfos
-			</a>
-		</td>
-	</tr>   
-	<tr>
-		<td></td>	        
-		<td>
-	        <span id="span$!recordCount" style="position:relative; display:none;">
-			<table style="border-bottom:0">	
-			<tr>
-				<td><strong>Channel</strong></td>
-				<td><strong>Label</strong></td>
-				<td><strong>Samplingrate [Hz]</strong></td>
-			</tr>	
-			#foreach($record in $records)
-					<tr>
-					<td>$record.get(0)</td>
-					<td>$record.get(1)</td>
-					<td>$record.get(2)</td>
-					</tr>	
-			#end
-			</table>
-			</span>
-		</td>
-	</tr>
+		<td><strong>Channel</strong></td>
+		<td><strong>Label</strong></td>
+		<td><strong>Samplingrate [Hz]</strong></td>
+	</tr>	
+	#foreach($record in $records)
+		<tr>
+			<td>$record.get(0)</td>
+			<td>$record.get(1)</td>
+			<td>$record.get(2)</td>
+		</tr>	
+	#end
 </table>
