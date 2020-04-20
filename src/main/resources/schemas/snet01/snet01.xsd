@@ -6,7 +6,7 @@
 
 	<xs:complexType name="sleepResearchSessionData">
 		<xs:annotation>
-			<xs:documentation>Sleep Research Session (including PSG)</xs:documentation>
+			<xs:documentation>Sleep Research Session</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="xnat:imageSessionData"/>
@@ -32,7 +32,6 @@
 					<xs:element name="numberofsignalsindatarecord" type="xs:integer" minOccurs="0"/>
 					<xs:element name="psgdevice" type="xs:string" minOccurs="0"/>  
 					<xs:element name="durationofrecordhours" type="xs:float" minOccurs="0"/>
-					<xs:element name="continuousdataflag" type="xs:integer" minOccurs="0"/> 
 					<xs:element name="comment" type="xs:string" minOccurs="0"/> 
 					<xs:element name="records" minOccurs="0">
 						<xs:complexType>
@@ -40,7 +39,7 @@
 								<xs:element name="record" minOccurs="0" maxOccurs="unbounded">
 									<xs:annotation>
 										<xs:appinfo>
-											<xdat:element displayIdentifiers="labeldevice"/>
+											<xdat:element displayIdentifiers="label"/>
 											<xdat:field>
 												<xdat:relation uniqueComposite="scan_id_fk" relationType="single"/>
 											</xdat:field>
@@ -48,10 +47,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:sequence>
-											<xs:element name="labelstandard" type="xs:string" minOccurs="0"/>
-											<xs:element name="channelnumberdevice" type="xs:integer" minOccurs="0"/>
-											<xs:element name="channelnumberstandard" type="xs:integer" minOccurs="0"/>
-											<xs:element name="numberofchunks" type="xs:integer" minOccurs="0"/>
+											<xs:element name="channelnumber" type="xs:integer" minOccurs="0"/>
 											<xs:element name="samplingrate" type="xs:string" minOccurs="0"/>
 											<xs:element name="transducertype" type="xs:string" minOccurs="0"/>
 											<xs:element name="physicaldimension" type="xs:string" minOccurs="0"/>
@@ -64,7 +60,7 @@
 											<xs:element name="reserved" type="xs:string" minOccurs="0"/>
 											<xs:element name="comment" type="xs:string" minOccurs="0"/>
 										</xs:sequence>
-										<xs:attribute name="labeldevice" type="xs:string">
+										<xs:attribute name="label" type="xs:string">
 											<xs:annotation>
 												<xs:appinfo>
 													<xdat:field uniqueComposite="scan_id_fk"/>

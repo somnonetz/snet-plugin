@@ -3,7 +3,7 @@
 #set ($nrRecords = $user.getQueryResultsAsArrayList("SELECT * FROM snet01_psgscandata_record").size()) 
 #set ($recordCount = $scanCounter+$nrScans)
 #set ($imageScanId = $scan.getProperty("xnat_imagescandata_id"))
-#set ($query = "SELECT channelnumberdevice, labeldevice, samplingrate FROM snet01_psgscandata_record WHERE records_record_snet01_psgscanda_xnat_imagescandata_id = $imageScanId ORDER BY channelnumberdevice")
+#set ($query = "SELECT channelnumber, label, samplingrate, transducertype, physicaldimension, physicalminimum, physicalmaximum, digitalminimum, digitalmaximum, prefiltering, samplesinrecord FROM snet01_psgscandata_record WHERE records_record_snet01_psgscanda_xnat_imagescandata_id = $imageScanId ORDER BY channelnumber")
 #set ($records = $user.getQueryResultsAsArrayList($query))
 
 <h1> EDF Headers </h1>
@@ -60,12 +60,72 @@
 		<td><strong>Channel</strong></td>
 		<td><strong>Label</strong></td>
 		<td><strong>Samplingrate [Hz]</strong></td>
+		<td><strong>Transducer Type</strong></td>
+		<td><strong>Physical Dimension</strong></td>
+		<td><strong>Physical Minimum</strong></td>
+		<td><strong>Physical Maximum</strong></td>
+		<td><strong>Digital Minimum</strong></td>
+		<td><strong>Digital Maximum</strong></td>
+		<td><strong>Prefiltering</strong></td>
+		<td><strong>Samples in Record</strong></td>
 	</tr>	
 	#foreach($record in $records)
 		<tr>
-			<td>$record.get(0)</td>
-			<td>$record.get(1)</td>
-			<td>$record.get(2)</td>
+			<td>
+				#if($record.get(0))
+					$record.get(0)
+				#end
+			</td>
+			<td>
+				#if($record.get(1))
+					$record.get(1)
+				#end
+			</td>
+			<td>
+				#if($record.get(2))
+					$record.get(2)
+				#end
+			</td>
+			<td>
+				#if($record.get(3))
+					$record.get(3)
+				#end
+			</td>
+			<td>
+				#if($record.get(4))
+					$record.get(4)
+				#end
+			</td>
+			<td>
+				#if($record.get(5))
+					$record.get(5)
+				#end
+			</td>
+			<td>
+				#if($record.get(6))
+					$record.get(6)
+				#end
+			</td>
+			<td>
+				#if($record.get(7))
+					$record.get(7)
+				#end
+			</td>
+			<td>
+				#if($record.get(8))
+					$record.get(8)
+				#end
+			</td>
+			<td>
+				#if($record.get(9))
+					$record.get(9)
+				#end
+			</td>
+			<td>
+				#if($record.get(10))
+					$record.get(10)
+				#end
+			</td>
 		</tr>	
 	#end
 </table>
