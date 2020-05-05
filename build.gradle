@@ -44,7 +44,7 @@ buildscript {
 }
 
 def groupName = 'org.nrg.xnat.plugin'
-def pluginVersion = '0.1.3'
+def pluginVersion = '0.1.4'
 
 group groupName
 version pluginVersion
