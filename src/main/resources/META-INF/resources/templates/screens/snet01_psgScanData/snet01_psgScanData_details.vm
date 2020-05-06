@@ -8,7 +8,19 @@
 #set ($query = "SELECT channelnumber, label, samplingrate, transducertype, physicaldimension, physicalminimum, physicalmaximum, digitalminimum, digitalmaximum, prefiltering, samplesinrecord FROM snet01_psgscandata_record WHERE records_record_snet01_psgscanda_xnat_imagescandata_id = $imageScanId ORDER BY channelnumber")
 #set ($records = $user.getQueryResultsAsArrayList($query))
 
-<button onClick="window.open(`${window.origin}/sn-editor?edf=${window.origin}${serverRoot}` + '/data/experiments/' + '$imageSessionId' + '/scans/$label/resources/EDF/files/' + '$label' + '.edf')">View EDF file</button>
+<script>
+function viewEDFFile() {
+	window.open(
+		window.origin + '/sn-editor'
+		+ '?edf=' + window.origin + serverRoot + '/data/experiments/' + '$imageSessionId' + '/scans/$label/resources/EDF/files/' + '$label' + '.edf'
+		+ '&project=$om.getProject()'
+		+ '&subject=$om.getSubjectId()'
+		+ '&experiment=$imageSessionId'
+	);
+}
+</script>
+
+<button onClick="viewEDFFile()">View EDF file</button>
 
 <h1> EDF Headers </h1>
 
