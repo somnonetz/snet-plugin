@@ -8,6 +8,8 @@
 #set ($query = "SELECT channelnumber, label, samplingrate, transducertype, physicaldimension, physicalminimum, physicalmaximum, digitalminimum, digitalmaximum, prefiltering, samplesinrecord FROM snet01_psgscandata_record WHERE records_record_snet01_psgscanda_xnat_imagescandata_id = $imageScanId ORDER BY channelnumber")
 #set ($records = $user.getQueryResultsAsArrayList($query))
 
+#macro(escapeProperty $prop)#escapeHTML("$!scan.getProperty($prop)")#end
+
 <script>
 function viewEDFFile() {
 	window.open(
@@ -24,66 +26,84 @@ function viewEDFFile() {
 
 <h1> EDF Headers </h1>
 
-<table>
-	#if($scan.getProperty("quality"))
+<table class="xnat-table alt1 compact rows-only">
+	#if($scan.getProperty("edfversion"))
 	<tr>
-		<td></td>
-		<td>Quality</td>
-		<td align="left">$!scan.getProperty("quality")</td>
+		<th>EDF Version</th>
+		<td align="left">#escapeProperty("edfversion")</td>
 	</tr>
 	#end
-	#if($scan.getProperty("psgdevice"))
+	#if($scan.getProperty("patientid"))
 	<tr>
-		<td></td>
-		<td>PSG-Model</td>
-		<td align="left">$!scan.getProperty("psgdevice")</td>
+		<th>Patient ID</th>
+		<td align="left">#escapeProperty("patientid")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("localrecordid"))
+	<tr>
+		<th>Local Recording ID</th>
+		<td align="left">#escapeProperty("localrecordid")</td>
 	</tr>
 	#end
 	#if($scan.getProperty("recordingstartdate"))
 	<tr>
-		<td></td>
-		<td>Recording Start Date</td>
-		<td align="left">$!scan.getProperty("recordingstartdate")</td>
+		<th>Recording Start Date</th>
+		<td align="left">#escapeProperty("recordingstartdate")</td>
 	</tr>
 	#end
 	#if($scan.getProperty("recordingstarttime"))
 	<tr>
-		<td></td>
-		<td>Recording Start Time</td>
-		<td align="left">$!scan.getProperty("recordingstarttime")</td>
+		<th>Recording Start Time</th>
+		<td align="left">#escapeProperty("recordingstarttime")</td>
 	</tr>
 	#end
-	#if($scan.getProperty("durationofrecordhours"))
+	#if($scan.getProperty("numberofheaderbytes"))
 	<tr>
-		<td></td>
-		<td>Duration of Record (hours)</td>
-		<td align="left">$!scan.getProperty("durationofrecordhours")</td>
+		<th>Number of Header Bytes</th>
+		<td align="left">#escapeProperty("numberofheaderbytes")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("reservedheaderfield"))
+	<tr>
+		<th>Reserved</th>
+		<td align="left">#escapeProperty("reservedheaderfield")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("numberofdatarecords"))
+	<tr>
+		<th>Number of Data Records</th>
+		<td align="left">#escapeProperty("numberofdatarecords")</td>
+	</tr>
+	#end
+	#if($scan.getProperty("durationofdatarecordseconds"))
+	<tr>
+		<th>Duration (seconds)</th>
+		<td align="left">#escapeProperty("durationofdatarecordseconds")</td>
 	</tr>
 	#end
 	#if($scan.getProperty("numberofsignalsindatarecord"))
 	<tr>
-		<td></td>
-		<td>Number of Channels</td>
-		<td align="left">$!scan.getProperty("numberofsignalsindatarecord")</td>
+		<th>Number of Signals</th>
+		<td align="left">#escapeProperty("numberofsignalsindatarecord")</td>
 	</tr>	
 	#end
 </table>
 
 <h2>Channel Headers</h2>
 
-<table style="border-bottom:0">	
+<table class="xnat-table compact alt1" style="borders: none;">	
 	<tr>
-		<td><strong>Channel</strong></td>
-		<td><strong>Label</strong></td>
-		<td><strong>Samplingrate [Hz]</strong></td>
-		<td><strong>Transducer Type</strong></td>
-		<td><strong>Physical Dimension</strong></td>
-		<td><strong>Physical Minimum</strong></td>
-		<td><strong>Physical Maximum</strong></td>
-		<td><strong>Digital Minimum</strong></td>
-		<td><strong>Digital Maximum</strong></td>
-		<td><strong>Prefiltering</strong></td>
-		<td><strong>Samples in Record</strong></td>
+		<th><strong>Channel</strong></th>
+		<th><strong>Label</strong></th>
+		<th><strong>Samplingrate [Hz]</strong></th>
+		<th><strong>Transducer Type</strong></th>
+		<th><strong>Physical Dimension</strong></th>
+		<th><strong>Physical Minimum</strong></th>
+		<th><strong>Physical Maximum</strong></th>
+		<th><strong>Digital Minimum</strong></th>
+		<th><strong>Digital Maximum</strong></th>
+		<th><strong>Prefiltering</strong></th>
+		<th><strong>Samples in Record</strong></th>
 	</tr>	
 	#foreach($record in $records)
 		<tr>

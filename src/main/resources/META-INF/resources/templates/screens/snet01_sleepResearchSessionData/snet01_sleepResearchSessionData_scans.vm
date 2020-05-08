@@ -1,1 +1,74 @@
+<script>
+    var launcher = XNAT.plugin.containerService.launcher,
+        undefined,
+        rootUrl = XNAT.url.rootUrl,
+        projectId = XNAT.data.context.projectID,
+        xsiType = XNAT.data.context.xsiType
+
+    function errorHandler(e){
+        console.log(e);
+        xmodal.alert({
+            title: 'Error',
+            content: '<p><strong>Error ' + e.status + ': '+ e.statusText+'</strong></p>',
+            okAction: function () {
+                xmodal.closeAll();
+            }
+        });
+    }
+
+    function fullScanPath(scanId){
+        var sessionId = (XNAT.data.context.isImageSession) ? XNAT.data.context.ID : null;
+        if (!sessionId) return false;
+        return '/archive/experiments/'+sessionId+'/scans/'+scanId;
+    }
+
+    var xsiScanType = "snet01:psgScanData";
+
+    XNAT.xhr.getJSON({
+        url: rootUrl('/xapi/commands/available?project=' + projectId + '&xsiType=' + xsiScanType),
+        success: function (data) {
+            var availableCommands = data;
+            if (!availableCommands.length) {
+                return false;
+            } else {
+                // build menu of commands
+                var spawnedCommands = [];
+                availableCommands.forEach(function (command) {
+                    command.launcher = 'multiple-scans';
+                    command.uri = '';
+                    launcher.addMenuItem(command,spawnedCommands);
+                });
+
+                // add action menu to each scan listing
+                launcher.scanList = XNAT.data.context.scans || [];
+                launcher.scanList.forEach(function(scan){
+                    var scanCommands = [];
+                    availableCommands.forEach(function (command) {
+                        command.launcher = 'single-scan';
+                        command.uri = fullScanPath(scan['id']);
+                        launcher.addMenuItem(command,scanCommands);
+                    });
+
+                    if (scanCommands.length > 0){
+                        var scanActionTarget = $('tr#scan-'+scan['id']).find('.single-scan-actions-menu');
+                        scanActionTarget.append(scanCommands)
+                        $('.run-menu').show();
+                    }
+                });
+
+                if (spawnedCommands.length > 0) {
+                    // add commands to Bulk Run action menu at the top of the scan table
+                    var menuTarget = $('#scanActionsMenu');
+                    launcher.createMenu(menuTarget,spawnedCommands);
+                    $('.scan-actions-controls').show();
+                    $('#scanTable-run-containers').removeClass('hidden');
+                }
+            }
+        },
+        fail: function(e) {
+            errorHandler(e);
+        }
+    });
+</script>
+
 #parse($turbineUtils.getTemplateName("_scans","xnat:imageSessionData",$project))
