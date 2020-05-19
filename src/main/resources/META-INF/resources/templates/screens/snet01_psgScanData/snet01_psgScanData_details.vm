@@ -1,12 +1,12 @@
-#set ($user = $data.getSession().getAttribute("userHelper"))
+#set ($userHelper = $data.getSession().getAttribute("userHelper"))
 #set ($nrScans = $om.getSortedScans().size())
-#set ($nrRecords = $user.getQueryResultsAsArrayList("SELECT * FROM snet01_psgscandata_record").size()) 
+#set ($nrRecords = $userHelper.getQueryResultsAsArrayList("SELECT * FROM snet01_psgscandata_record").size()) 
 #set ($recordCount = $scanCounter+$nrScans)
 #set ($imageScanId = $scan.getProperty("xnat_imagescandata_id"))
 #set ($imageSessionId = $scan.getProperty("image_session_id"))
 #set ($label = $scan.getProperty("id"))
 #set ($query = "SELECT channelnumber, label, samplingrate, transducertype, physicaldimension, physicalminimum, physicalmaximum, digitalminimum, digitalmaximum, prefiltering, samplesinrecord FROM snet01_psgscandata_record WHERE records_record_snet01_psgscanda_xnat_imagescandata_id = $imageScanId ORDER BY channelnumber")
-#set ($records = $user.getQueryResultsAsArrayList($query))
+#set ($records = $userHelper.getQueryResultsAsArrayList($query))
 
 #macro(escapeProperty $prop)#escapeHTML("$!scan.getProperty($prop)")#end
 
