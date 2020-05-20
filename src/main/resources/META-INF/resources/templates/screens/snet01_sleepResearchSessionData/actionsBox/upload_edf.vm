@@ -7,8 +7,8 @@ function uploadEDFFile() {
 		+ '&experiment=$om.getId()'
 	);
 }
-
 </script>
+
 <li class="yuimenuitem">
-    <a class="yuimenuitemlabel" onClick="uploadEDFFile()">Upload EDF File</A>
+    <a class="yuimenuitemlabel" onClick="uploadEDFFile()">Add PSG Recording <br> (Upload EDF File)</A>
 </li>

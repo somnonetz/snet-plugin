@@ -1,0 +1,13 @@
+<script>
+function uploadEDFFile() {
+	window.open(
+		window.origin + '/sn-editor'
+		+ '?project=$om.getProject()'
+		+ '&subject=$om.getId()'
+	);
+}
+</script>
+
+<li class="yuimenuitem">
+    <a class="yuimenuitemlabel" onClick="uploadEDFFile()">Add Sleep Research Session <br> (Upload EDF)</A>
+</li>
