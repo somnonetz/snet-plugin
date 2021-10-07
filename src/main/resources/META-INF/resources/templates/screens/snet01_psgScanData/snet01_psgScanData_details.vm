@@ -1,6 +1,6 @@
 #set ($userHelper = $data.getSession().getAttribute("userHelper"))
 #set ($nrScans = $om.getSortedScans().size())
-#set ($nrRecords = $userHelper.getQueryResultsAsArrayList("SELECT * FROM snet01_psgscandata_record").size()) 
+#set ($nrRecords = $userHelper.getQueryResultsAsArrayList("SELECT * FROM snet01_psgscandata_record").size())
 #set ($recordCount = $scanCounter+$nrScans)
 #set ($imageScanId = $scan.getProperty("xnat_imagescandata_id"))
 #set ($imageSessionId = $scan.getProperty("image_session_id"))
@@ -85,13 +85,13 @@ function viewEDFFile() {
 	<tr>
 		<th>Number of Signals</th>
 		<td align="left">#escapeProperty("numberofsignalsindatarecord")</td>
-	</tr>	
+	</tr>
 	#end
 </table>
 
 <h2>Channel Headers</h2>
 
-<table class="xnat-table compact alt1" style="borders: none;">	
+<table class="xnat-table compact alt1" style="borders: none;">
 	<tr>
 		<th><strong>Channel</strong></th>
 		<th><strong>Label</strong></th>
@@ -104,7 +104,7 @@ function viewEDFFile() {
 		<th><strong>Digital Maximum</strong></th>
 		<th><strong>Prefiltering</strong></th>
 		<th><strong>Samples in Record</strong></th>
-	</tr>	
+	</tr>
 	#foreach($record in $records)
 		<tr>
 			<td>
@@ -162,6 +162,6 @@ function viewEDFFile() {
 					$record.get(10)
 				#end
 			</td>
-		</tr>	
+		</tr>
 	#end
 </table>

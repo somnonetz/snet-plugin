@@ -1,151 +1,114 @@
 /*
- * build.gradle
+ * xnat-template: build.gradle
  * XNAT http://www.xnat.org
- * Copyright (c) 2019, Washington University School of Medicine
+ * Copyright (c) 2020, Washington University School of Medicine
  * All Rights Reserved
  *
  * Released under the Simplified BSD.
  */
 
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'groovy'
-apply plugin: 'java'
-apply plugin: 'jacoco'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: 'xnat-data-builder'
+import org.gradle.internal.jvm.Jvm
 
+// TODO: This block is required for the "xnat-data-builder" plugin to function.
 buildscript {
-    ext{
-        vXnat = '1.7.5.3'
+    ext {
+        vXnat = "1.7.6"
     }
     repositories {
         mavenLocal()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        jcenter()
         mavenCentral()
-        maven {
-            url 'https://nrgxnat.jfrog.io/nrgxnat/libs-release'
-            name 'XNAT Release Repository'
-        }
-        maven {
-            url 'https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot'
-            name 'XNAT Snapshot Repository'
-        }
+        jcenter()
+        gradlePluginPortal()
+        maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-release" }
+        maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot" }
     }
     dependencies {
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
-        classpath "org.nrg.xnat.build:xnat-data-builder:1.7.5"
+        classpath "org.nrg.xnat.build:xnat-data-builder:${vXnat}"
+        classpath "io.franzbecker:gradle-lombok:3.3.0"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
     }
 }
 
-def groupName = 'org.nrg.xnat.plugin'
-def pluginVersion = '0.1.8'
+// TODO: Change the group and version to values appropriate for your plugin project.
+// NOTE: You should not leave the group value set to "org.nrg.xnatx.plugins"! Use
+//       something to indicate who developed the plugin and follow the standard
+//       Maven naming conventions: https://maven.apache.org/guides/mini/guide-naming-conventions.html
+//       For example, if a group at Miskatonic University developed a plugin, the
+//       group might be "edu.miskatonic.imaging.xnat".
+group "org.snet.xnat.plugins"
+version "0.1.9"
 
-group groupName
-version pluginVersion
+// TODO: This is the minimum set of Gradle plugins required to build most XNAT plugins. You may include many others, including plugins for testing and test coverage, IDE integration, and more.
+apply plugin: "java"
+apply plugin: "xnat-data-builder"
+apply plugin: "io.franzbecker.gradle-lombok"
+apply plugin: "io.spring.dependency-management"
 
+// TODO: This provides access to all of these repositories for dependency resolution.
 repositories {
     mavenLocal()
-    maven {
-        url 'https://nrgxnat.jfrog.io/nrgxnat/libs-release'
-        name 'XNAT Release Repository'
-    }
-    mavenCentral()
     jcenter()
-    maven {
-        url 'https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot'
-        name 'XNAT Snapshot Repository'
-    }
-    maven {
-        url 'https://nrgxnat.jfrog.io/nrgxnat/ext-release'
-        name 'XNAT External Release Repository'
-    }
+    mavenCentral()
+    maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-release" }
+    maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot" }
 }
 
+// TODO: As of the 1.7.x release, XNAT is built as a Java 7-compatible (i.e. JDK 1.7) application. All plugins must be 1.7 compatible as well.
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-if (hasProperty("rt.17.jar")) {
-    // Solution for bootstrap classpath warning and possible issues with compatibility with 1.7 libraries
-    // was taken from this post on discuss.gradle.org: http://bit.ly/24xD9j0
-    def rt17jar = getProperty("rt.17.jar")
-    logger.info "Using ${rt17jar} as the bootstrap class path jar."
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.fork = true
-            options.compilerArgs << "-XDignore.symbol.file"
-            options.bootClasspath = rt17jar
-        }
-    }
-} else {
-    logger.warn "No value was set for the rt.17.jar build property, using the default bootstrap class path. You should consider setting rt.17.jar to indicate a jar file containing the Java 1.7 run-time library:\n"
-    logger.warn "  ./gradlew -Prt.17.jar=rt-1.7.0_45.jar war\n"
-}
-
-compileJava {
-    options.fork = false
-}
-
-jacoco {
-    toolVersion = "0.7.9"
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.enabled = false
-        csv.enabled = false
-        html.destination "${buildDir}/jacocoHtml"
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-            srcDir 'build/xnat-generated/src/main/java'
-        }
-        resources {
-            srcDir 'src/main/resources'
-            srcDir 'build/xnat-generated/src/main/resources'
-        }
-    }
-}
-
-configurations {
-    all {
-        exclude group: "jamon"
-        exclude group: "javax.jms", module: "jms"
-        exclude group: "javax.mail", module: "mail"
-        exclude group: "javax.servlet", module: "servlet-api"
-        exclude group: "javax.sql", module: "jdbc-stdext"
-        exclude group: "javax.transaction", module: "jta"
-
-    }
-    compile.extendsFrom(compileAndInclude)
-}
-
+// TODO: This defines a dependency package, specifically the XNAT NRG parent pom, which specifies
+//       versions for all of XNAT's dependencies. This helps ensure that plugins are building
+//       against the same versions of various libraries as XNAT itself.
 dependencyManagement.imports {
     mavenBom "org.nrg:parent:${vXnat}"
 }
 
+// TODO: This is a pretty minimal set of dependencies, so don't worry if you need to add more.
 dependencies {
-    compile "org.nrg.xnat:web"
-    compile "org.nrg.xnat:xnat-data-models"
-    compile "org.nrg.xdat:core"
-    compile "org.nrg:framework"
-    compile(group: 'turbine', name: 'turbine') {
-        exclude group: '*'
+    implementation "org.nrg.xnat:web"
+    implementation "org.nrg.xnat:xnat-data-models"
+    implementation "org.nrg.xdat:core"
+    implementation "io.springfox:springfox-swagger2"
+    implementation "io.springfox:springfox-swagger-ui"
+}
+
+lombok {
+    version = dependencyManagement.importedProperties["lombok.version"] as String
+    sha256 = dependencyManagement.importedProperties["lombok.checksum"] as String
+}
+
+// TODO: If the compiler is Java 8 or later, this checks for a Java 7 version of the primary Java run-time library. Building with post-Java 7 libraries can result in occasional compatibility issues.
+def javaVersion = Jvm.current().javaVersion
+if (javaVersion.java8Compatible || javaVersion.java9Compatible) {
+    if (hasProperty("rt.17.jar")) {
+        // Solution for bootstrap classpath warning and possible issues with compatibility with 1.7 libraries
+        // was taken from this post on discuss.gradle.org: http://bit.ly/24xD9j0
+        def rt17jar = property "rt.17.jar"
+        logger.info "Using ${rt17jar} as the bootstrap class path jar."
+        gradle.projectsEvaluated {
+            tasks.withType(JavaCompile) {
+                options.fork = true
+                options.compilerArgs << "-XDignore.symbol.file"
+                options.bootstrapClasspath = files(rt17jar as String)
+            }
+        }
+    } else {
+        logger.warn "No value was set for the rt.17.jar build property, using the default bootstrap class path. You should consider setting rt.17.jar to indicate a jar file containing the Java 1.7 run-time library:\n"
+        logger.warn "  ./gradlew -Prt.17.jar=rt-1.7.0_45.jar war\n"
     }
-    compile "org.apache.velocity:velocity"
-    compile "log4j:log4j"
-    runtime 'org.springframework:spring-web'
-    runtime 'io.springfox:springfox-swagger-ui'
-    testCompile "junit:junit"
-    testCompile "org.springframework:spring-test"
+}
+
+// TODO: This tells the compiler where to find source code. This isn't required in a standard build, but the XNAT data builder generates code from XNAT data-type schemas that the compiler needs to know about.
+sourceSets {
+    main {
+        java {
+            srcDir "src/main/java"
+            srcDir "build/xnat-generated/src/main/java"
+        }
+        resources {
+            srcDir "src/main/resources"
+            srcDir "build/xnat-generated/src/main/resources"
+        }
+    }
 }
