@@ -11,18 +11,21 @@
 #macro(escapeProperty $prop)#escapeHTML("$!scan.getProperty($prop)")#end
 
 <script>
-function viewEDFFile() {
+function downloadEDFFile() {
 	window.open(
-		window.origin + '/sn-editor'
-		+ '?edf=' + window.origin + serverRoot + '/data/experiments/' + '$imageSessionId' + '/scans/$label/resources/EDF/files/' + '$label' + '.edf'
-		+ '&project=$om.getProject()'
-		+ '&subject=$om.getSubjectId()'
-		+ '&experiment=$imageSessionId'
+		window.origin + serverRoot + '/data/experiments/' + '$imageSessionId' + '/scans/$label/resources/EDF/files/' + '$label' + '.edf'
+	);
+}
+
+function downloadAnnotationsFile() {
+	window.open(
+		window.origin + serverRoot + '/data/experiments/' + '$imageSessionId' + '/scans/$label/resources/EDF/files/' + '$label' + '-annotation.csv'
 	);
 }
 </script>
 
-<button onClick="viewEDFFile()">View EDF file</button>
+<button onClick="downloadEDFFile()">Download EDF file</button>
+<button onClick="downloadAnnotationsFile()">Download Annotations</button>
 
 <h1> EDF Headers </h1>
 
